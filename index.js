@@ -55,13 +55,17 @@ var processTemplate = function(templateSource, settings, callback) {
   partials.forEach(function(name) {
     
     
-    template._partials[name] = path.relative(path.resolve(path.dirname(settings._filepath)), path.join(root, name + extension));
+    template._partials[name] = path.relative(
+      path.resolve(path.dirname(settings._filepath)), path.join(root, name + extension)
+    ).split('\\').join('/');
   });
 
   // Map all extend to functions.
   extend.forEach(function(render) {
     var name = render.template;
-    var superTemplate = path.relative(path.resolve(path.dirname(settings._filepath)), path.join(root, name + extension));
+    var superTemplate = path.relative(
+      path.resolve(path.dirname(settings._filepath)), path.join(root, name + extension)
+    ).split('\\').join('/');
 
     // Pre-cache this template.
     extendsCache[render.partial] = true;
