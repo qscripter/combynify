@@ -53,13 +53,15 @@ var processTemplate = function(templateSource, settings, callback) {
 
   // Map all partials to functions.
   partials.forEach(function(name) {
-    template._partials[name] = path.resolve(path.join(root, name + extension));
+    
+    
+    template._partials[name] = path.relative(path.resolve(path.dirname(settings._filepath)), path.join(root, name + extension));
   });
 
   // Map all extend to functions.
   extend.forEach(function(render) {
     var name = render.template;
-    var superTemplate = path.resolve(path.join(root, name + extension));
+    var superTemplate = path.relative(path.resolve(path.dirname(settings._filepath)), path.join(root, name + extension));
 
     // Pre-cache this template.
     extendsCache[render.partial] = true;
@@ -94,6 +96,8 @@ var processTemplate = function(templateSource, settings, callback) {
 };
 
 function combynify(file, settings) {
+  
+  
   var fileExtension = path.extname(file);
 
   if (settings.extension) {
@@ -117,7 +121,7 @@ function combynify(file, settings) {
   // Mimic how the actual Combyne stores.
   settings._filters = {};
   settings._partials = {};
-  settings.root = settings.root || path.join(process.cwd(), 'views');
+  settings.root = path.resolve(settings.root) || path.join(process.cwd(), 'views');
   settings._filepath = file;
 
   var chunks = [];
